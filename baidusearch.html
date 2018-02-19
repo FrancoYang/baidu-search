@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>仿百度搜索栏下拉提示</title>
+	<style>
+	#q{
+		width: 300px;
+		height: 30px;
+		padding: 5px;
+		border: 1px solid #f90;
+		font-size:16px;
+	}
+	#ul1{
+		border: 1px solid #f90;
+		width: 310px;
+		margin:0;
+		padding: 0;
+		display:none;
+	}
+	li a{
+		line-height:30px;
+		padding: 5px;
+		text-decoration:none;
+		color:black;
+		display:block;
+	}
+	li a:hover{
+		background: #f90;
+		color:white;
+	}
+	</style>
+</head>
+<body>
+	<input type="text" id="q">
+	<ul id="ul1">
+		<li><a href="">111</a></li>
+		<li><a href="">111</a></li>
+		<li><a href="">111</a></li>
+		
+	</ul>
+	<script>
+	function search(data){
+		var oUl=document.getElementById("ul1");
+		var html="";
+		//当有提示内容时才显示，否则隐藏
+		if(data.s.length){
+			oUl.style.display="block";
+			for(var i=0;i<data.s.length;i++){
+				html+='<li><a href="">'+data.s[i]+'</a></li>';
+			}
+			oUl.innerHTML=html;
+		}else{
+			oUl.style.display="none";
+
+		}
+	}
+	var oQ=document.getElementById("q");
+	var oUl=document.getElementById("ul1");
+	oQ.onkeyup=function(){
+		//当输入内容不为空时，创建script标签，引入百度的接口后再添加到body标签里，应用了JSONP的原理
+		if(this.value!=""){
+			var oScript=document.createElement("script");
+			oScript.src="http://suggestion.baidu.com/su?wd="+this.value+"&cb=search";
+			// 这里的cb就是callback回调函数，因此接口中的内容不能直接使用，而是要自建函数调用
+			document.body.appendChild(oScript);
+		}else{
+			oUl.style.display="none";
+			//当提示内容为空时不显示提示内容，当输入内容为空时也不显示提示内容
+		}
+	}
+	</script>
+</body>
+</html>
